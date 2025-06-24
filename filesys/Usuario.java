@@ -2,6 +2,9 @@ package filesys;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Usuario {
     private final String nome;
@@ -84,5 +87,26 @@ public class Usuario {
 
     public String getPermissao() {
         return permissoesPorCaminho.get("/**");
+    }
+
+    // Exemplo de leitura do arquivo de usuários
+    public static Map<String, Usuario> carregarUsuariosDeArquivo(String caminhoArquivo) {
+        Map<String, Usuario> usuarios = new HashMap<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(caminhoArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split("\\s+");
+                if (partes.length == 3) {
+                    String nome = partes[0];
+                    String caminho = partes[1];
+                    String permissao = partes[2];
+                    usuarios.putIfAbsent(nome, new Usuario(nome));
+                    usuarios.get(nome).adicionarPermissao(caminho, permissao);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return usuarios;
     }
 }
