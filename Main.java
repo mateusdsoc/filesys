@@ -1,6 +1,14 @@
 import filesys.IFileSystem;
 
+<<<<<<< Updated upstream
+=======
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+>>>>>>> Stashed changes
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 import java.io.FileNotFoundException;
 
 import exception.PermissaoException;
@@ -52,7 +60,7 @@ public class Main {
         // a permissão desse usuário é de leitura, escrita e execução nesse novo diretório/arquivo,
         // e sempre será rwx para o usuário root.
         try {
-            Scanner userScanner = new Scanner(new java.io.File("users/users"));
+            Scanner userScanner = new Scanner(new java.io.File("users/users_mkdir"));
             while (userScanner.hasNextLine()) {
                 String line = userScanner.nextLine().trim();
                 if (!line.isEmpty()) {
@@ -86,6 +94,7 @@ public class Main {
         // Obs: Como passar a lista de usuários para o FileSystem?
         fileSystem = new FileSystem(/*usuários?*/);
 
+<<<<<<< Updated upstream
         // // DESCOMENTE O BLOCO ABAIXO PARA CRIAR O DIRETÓRIO RAIZ ANTES DE RODAR O MENU
         // // Cria o diretório raiz do sistema. Root sempre tem permissão total "rwx"
         // try {
@@ -93,6 +102,38 @@ public class Main {
         // } catch (CaminhoJaExistenteException | PermissaoException e) {
         //     System.out.println(e.getMessage());
         // }
+=======
+        // Cria o diretório raiz do sistema. Root sempre tem permissão total "rwx"
+        try {
+            fileSystem.mkdir(ROOT_DIR, ROOT_USER);
+            fileSystem.mkdir("/home", ROOT_USER);
+        } catch (CaminhoJaExistenteException | PermissaoException | CaminhoNaoEncontradoException e) {
+            System.out.println(e.getMessage());
+        }
+>>>>>>> Stashed changes
+
+        // Criação de diretórios com base nas permissões dos usuários
+        Set<String> caminhosParaCriar = new TreeSet<>(Comparator.comparingInt(s -> s.split("/").length));
+        for (Usuario usuario : usuariosMap.values()) {
+            caminhosParaCriar.addAll(usuario.getDiretoriosComPermissao());
+        }
+
+        for (String caminho : caminhosParaCriar) {
+            for (Usuario usuario : usuariosMap.values()) {
+                // Verifica se esse usuário tem permissão para o caminho
+                String permissao = usuario.getPermissaoParaCaminho(caminho);
+                if (permissao.contains("w") || usuario.getNome().equals("root")) {
+                    try {
+                        fileSystem.mkdir(caminho, usuario.getNome());
+                        break; // Uma vez criado por alguém com permissão, não precisa repetir
+                    } catch (CaminhoJaExistenteException e) {
+                        // Ignora se já foi criado
+                    } catch (PermissaoException | CaminhoNaoEncontradoException e) {
+                        System.out.println("Erro criando " + caminho + ": " + e.getMessage());
+                    }
+                }
+            }
+        }
 
         // Menu interativo.
         menu();
@@ -213,9 +254,30 @@ public class Main {
     public static void read() throws CaminhoNaoEncontradoException, PermissaoException {
         System.out.println("Insira o caminho do arquivo a ser lido:");
         String caminho = scanner.nextLine();
+<<<<<<< Updated upstream
         byte[] buffer = new byte[READ_BUFFER_SIZE]; // Exemplo de tamanho de buffer por load/leitura . O que acontece se o Buffer for menor que o conteúdo a ser lido?     
         
         fileSystem.read(caminho, user, buffer); // Lógica para ler arquivos maiores que o buffer deve ser implementada. 
+=======
+        byte[] buffer = new byte[READ_BUFFER_SIZE];
+
+        Offset offset = new Offset(0);
+        int offsetAnterior;
+        int bytesLidos;
+
+        System.out.println("Conteúdo lido:");
+        do {
+            offsetAnterior = offset.getValue();
+            fileSystem.read(caminho, user, buffer, offset);
+            bytesLidos = offset.getValue() - offsetAnterior;
+
+            if (bytesLidos > 0)
+                System.out.write(buffer, 0, bytesLidos);
+        } while (bytesLidos > 0);
+
+        System.out.flush();
+        System.out.println();
+>>>>>>> Stashed changes
     }
 
     public static void mv() throws CaminhoNaoEncontradoException, PermissaoException {

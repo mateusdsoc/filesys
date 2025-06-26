@@ -1,0 +1,13 @@
+root / rwx
+tulio /users rwx
+jones /users/joao rwx
+marcos /users/joao/documentos rwx
+matheus /users/joao/documentos/viagem rwx
+paulo /users/joao/documentos/viagem/2024 rwx
+jose /users/joao/documentos/viagem/2024/dezembro rwx
+caio /users/joao/documentos/viagem/2024/dezembro/fotossíntese rwx
+arthur /users/joao/documentos/viagem/2024/dezembro/fotos rwx
+bernardo  /users/joao/documentos/viagem/2024/janeiro rwx
+mauro /users/joao/documentos/viagem/2023 rwx
+pablo /users/joao/documentos/viagem/2023/janeiro rwx
+henrique /users/joao/documentos/viagem/2023/janeiro/fotos rwx
