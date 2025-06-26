@@ -64,7 +64,7 @@ public class Main {
         // e sempre será rwx para o usuário root.
         Map<String, Usuario> usuariosMap = new HashMap<>();
         try {
-            Scanner userScanner = new Scanner(new java.io.File("users/users"));
+            Scanner userScanner = new Scanner(new java.io.File("users/users_mkdir"));
             while (userScanner.hasNextLine()) {
                 String line = userScanner.nextLine().trim();
                 if (!line.isEmpty()) {
