@@ -40,26 +40,29 @@ public class Usuario {
     }
 
     private int getPadraoScore(String padrao, String caminho) {
-        if (padrao.equals(caminho)) return 100; // exato
-        if (padrao.endsWith("/*")) return 10;   // filho direto
-        if (padrao.endsWith("/**")) return 1;   // recursivo
+        if (padrao.equals(caminho))
+            return 100; // exato
+        if (padrao.endsWith("/*"))
+            return 10; // filho direto
+        if (padrao.endsWith("/**"))
+            return 1; // recursivo
         return 0; // outros
     }
 
     private boolean caminhoMatches(String padrao, String caminho) {
         // Aceita qualquer subcaminho
-      if (padrao.endsWith("/**")) {
+        if (padrao.endsWith("/**")) {
             String base = padrao.substring(0, padrao.length() - 3);
             // Só casa se for um subcaminho, não o próprio diretório base
             return !caminho.equals(base) && caminho.startsWith(base + "/");
         }
-         // Aceita apenas filhos diretos
+        // Aceita apenas filhos diretos
         if (padrao.endsWith("/*")) {
             String base = padrao.substring(0, padrao.length() - 2);
             if (!caminho.startsWith(base + "/"))
                 return false;
             String resto = caminho.substring(base.length() + 1);
-            return !resto.isEmpty() && !resto.contains("/"); 
+            return !resto.isEmpty() && !resto.contains("/");
         }
         return padrao.equals(caminho);
     }
